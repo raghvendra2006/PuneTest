@@ -1,0 +1,14 @@
+SELECT
+  resourceId,
+  configuration.accountId,
+  configuration.instanceId,
+  configuration.instanceType,
+  configuration.availabilityZone,
+  configuration.imageId,  -- Assuming IMDSv2 is used for metadata
+  configuration.instanceState.name,
+  attachments.volumeId,
+  attachments.volumeSize,
+  attachments.encrypted
+WHERE
+  resourceType = 'AWS::EC2::Instance'
+  AND configuration.imageId LIKE '%amazon-linux-2%'  -- Optional: filter for Amazon Linux 2 AMIs
