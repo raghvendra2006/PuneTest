@@ -1,14 +1,19 @@
 SELECT
   resourceId,
-  configuration.accountId,
+  SUBSTRING(resourceId, 1, 8) AS accountId,
   configuration.instanceId,
   configuration.instanceType,
   configuration.availabilityZone,
   configuration.imageId,  -- Assuming IMDSv2 is used for metadata
   configuration.instanceState.name,
-  attachments.volumeId,
-  attachments.volumeSize,
-  attachments.encrypted
+  (
+    SELECT configuration
+    FROM 
+      (
+        SELECT configuration.volumeId, configuration.size, configuration.encrypted
+        FROM AWS::EC2::Volume
+        WHERE resourceId = instances.resourceId
+      ) AS volumes
+  ) AS volumeInfo
 WHERE
   resourceType = 'AWS::EC2::Instance'
-  AND configuration.imageId LIKE '%amazon-linux-2%'  -- Optional: filter for Amazon Linux 2 AMIs
