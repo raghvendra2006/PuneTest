@@ -1,1 +1,23 @@
 https://read.docs.aviatrix.com/HowTos/config_paloaltoGCP.html
+
+Subject: Request for Approval: Restricted Port Access (VDI and ZPA)  for Next 6 Months
+
+Dear ISG Team,
+
+Pleae find the attached firewall rule list and provide your approval for point number 22 and 26.
+
+Duration: 6 months
+Reason for Request: We are creating AWS DR Landing zone and deploying third party appliances and we need to access those device management access through VDI and ZPA inital phase next 6 months.
+
+In the attached excel 
+Proposed Port Restrictions:
+[List the specific ports or range of ports that will be restricted during this period.]
+
+Pre-Approved Services:
+[]
+
+We kindly request the Internet Security Group Team to review and approve this proposal at your earliest convenience. If there are any additional details needed or if you require further clarification, please do not hesitate to reach out.
+
+Thank you for your time and attention to this matter.
+
+Best regards,
