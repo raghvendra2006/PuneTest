@@ -1,3 +1,27 @@
 https://read.docs.aviatrix.com/HowTos/config_paloaltoGCP.html
 
 PROTO="udp";DST_ADDR="10.176.4.180";DST_PORT=445;(</dev/${PROTO}/${DST_ADDR}/${DST_PORT} && STATUS="OPEN" || STATUS="CLOSED OR UNAVAILABLE"; echo Port ${DST_PORT}/${PROTO^^} on ${DST_ADDR} is ${STATUS} ) 2>/dev/null   -> Test udp port
+
+
+SELECT * FROM TABLE(rdsadmin.rds_file_util.listdir('DATA_PUMP_DIR')) ORDER BY MTIME;  -> List File Names
+EXEC UTL_FILE.FREMOVE('DATA_PUMP_DIR','sample_copied.dmp');   -> Delete file name after not in use.
+
+###  Upload the dump file to your Amazon S3 bucket ###
+SELECT rdsadmin.rdsadmin_s3_tasks.upload_to_s3( p_bucket_name => 'mys3bucket', p_directory_name => 'DATA_PUMP_DIR') AS TASK_ID FROM DUAL;
+SELECT rdsadmin.rdsadmin_s3_tasks.upload_to_s3( p_bucket_name    =>  'rdabackup', p_s3_prefix      =>  'RDS_09Feb22/', p_directory_name => 'DATA_PUMP_DIR') AS TASK_ID FROM DUAL; 
+
+SQL> exec rdsadmin.rdsadmin_util.kill(SID,SERIAL);  ->  Kill Inactive session in aws rds
+
+SQL> exec rdsadmin.rdsadmin_util.kill(40,61783, 'IMMEDIATE');
+
+Steps 1 Upload the File To S3 Bucket
+
+Steps 2 Download the File TO RDS from S3 
+SELECT rdsadmin.rdsadmin_s3_tasks.download_from_s3( p_bucket_name    =>  'aomsdbbkp', p_directory_name =>  'DATA_PUMP_DIR') AS TASK_ID FROM DUAL;
+
+Steps 3 Check file download status (task-id from above output)
+SELECT text FROM TABLE(rdsadmin.rds_file_util.read_text_file('BDUMP','dbtask-1614260577839-328.log'));
+
+ 
+Steps 4 Check the downloaded file status in the directory
+SELECT * FROM TABLE(rdsadmin.rds_file_util.listdir('DATA_PUMP_DIR')) ORDER BY MTIME;
