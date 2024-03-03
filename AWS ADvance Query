@@ -1,0 +1,1 @@
+  "query": "SELECT resourceId, resourceType, aws:ec2:instanceState, aws:ec2:launchTime WHERE resourceType = 'AWS::EC2::Instance' AND aws:ec2:instanceState = 'stopped' AND timestampdiff('day', aws:ec2:launchTime, current_time()) > 30"
